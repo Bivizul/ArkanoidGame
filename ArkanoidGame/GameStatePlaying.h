@@ -1,5 +1,6 @@
 #pragma once
 #include "Ball.h"
+#include "Block.h"
 #include "Platform.h"
 #include "SFML/Audio.hpp"
 #include "SFML/Graphics.hpp"
@@ -27,6 +28,7 @@ namespace ArkanoidGame
 		// Game data
 		Platform platform;
 		Ball ball;
+		Block block;
 
 		// UI data
 		sf::Text scoreText;

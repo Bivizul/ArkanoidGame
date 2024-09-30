@@ -30,6 +30,7 @@ namespace ArkanoidGame
 
 		platform.Init();
 		ball.Init();
+		block.Init();
 
 		// Init sounds
 		gameOverSound.setBuffer(gameOverSoundBuffer);
@@ -50,11 +51,14 @@ namespace ArkanoidGame
 	{
 		platform.Update(timeDelta);
 		ball.Update(timeDelta);
+		block.Update(timeDelta);
 
 		const bool isCollision = platform.CheckCollisionWithBall(ball);
 		if (isCollision) {
 			ball.ReboundFromPlatform();
 		}
+
+		///////////////////////////////////////////
 
 		const bool isGameFinished = !isCollision && ball.GetPosition().y > platform.GetRect().top;
 		

@@ -55,6 +55,9 @@
     <ClCompile Include="GameStateData.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -90,5 +93,8 @@
     <ClInclude Include="Platform.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameStateData.h" />
+    <ClInclude Include="Block.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
