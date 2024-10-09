@@ -12,6 +12,8 @@ namespace ArkanoidGame
 
 		void ReboundFromPlatform();
 
+		void ReboundFromBlock();
+
 	private:
 		sf::Vector2f direction;
 	};

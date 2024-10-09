@@ -28,7 +28,7 @@ namespace ArkanoidGame
 		// Game data
 		Platform platform;
 		Ball ball;
-		Block block;
+		std::vector<Block> blocks;
 
 		// UI data
 		sf::Text scoreText;

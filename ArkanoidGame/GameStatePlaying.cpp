@@ -4,11 +4,12 @@
 #include "Text.h"
 #include <assert.h>
 #include <sstream>
+#include "GameStateGameOver.h"
 
 namespace ArkanoidGame
 {
 	void GameStatePlayingData::Init()
-	{	
+	{
 		// Init game resources (terminate if error)
 		assert(font.loadFromFile(FONTS_PATH + "Roboto-Regular.ttf"));
 		assert(gameOverSoundBuffer.loadFromFile(SOUNDS_PATH + "Death.wav"));
@@ -30,7 +31,16 @@ namespace ArkanoidGame
 
 		platform.Init();
 		ball.Init();
-		block.Init();
+
+		float x = BLOCK_WIDTH / 2;
+		blocks.reserve(13);
+		for (size_t i = 0; i < 13; i++)
+		{
+			Block block;
+			blocks.push_back(block);
+			blocks[i].Init(x, 50 + BLOCK_HEIGHT / 2);
+			x += BLOCK_WIDTH;
+		}
 
 		// Init sounds
 		gameOverSound.setBuffer(gameOverSoundBuffer);
@@ -51,25 +61,30 @@ namespace ArkanoidGame
 	{
 		platform.Update(timeDelta);
 		ball.Update(timeDelta);
-		block.Update(timeDelta);
+
+		for (auto it = blocks.begin(); it != blocks.end(); )
+		{
+			if (it->CheckCollisionWithBall(ball)) {
+				ball.ReboundFromBlock();
+				it = blocks.erase(it);
+			}
+			else {
+				++it;
+			}
+		}
 
 		const bool isCollision = platform.CheckCollisionWithBall(ball);
 		if (isCollision) {
 			ball.ReboundFromPlatform();
 		}
 
-		///////////////////////////////////////////
-
-		const bool isGameFinished = !isCollision && ball.GetPosition().y > platform.GetRect().top;
-		
-		if (isGameFinished)
+		const bool isWin = blocks.size() == 0;
+		const bool isLoss = (!isCollision && ball.GetPosition().y > platform.GetRect().top);
+		if (isWin || isLoss)
 		{
 			gameOverSound.play();
-			
 			Game& game = Application::Instance().GetGame();
-
-			// Find player in records table and update his score
-			//game.UpdateRecord(PLAYER_NAME, numEatenApples);
+			game.SetIsWin(isWin);
 			game.PushState(GameStateType::GameOver, false);
 		}
 	}
@@ -83,6 +98,10 @@ namespace ArkanoidGame
 		platform.Draw(window);
 		ball.Draw(window);
 
+		for (Block& block : blocks)
+		{
+			block.Draw(window);
+		}
 
 		scoreText.setOrigin(GetTextOrigin(scoreText, { 0.f, 0.f }));
 		scoreText.setPosition(10.f, 10.f);

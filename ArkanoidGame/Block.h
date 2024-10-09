@@ -1,6 +1,6 @@
 #pragma once
-#include "GameObject.h"
 #include "Ball.h"
+#include "GameObject.h"
 #include "SFML/Graphics.hpp"
 
 namespace ArkanoidGame
@@ -8,12 +8,7 @@ namespace ArkanoidGame
 	class Block : public GameObject
 	{
 	public:
-		void Init();
-		void Update(float timeDelta);
-
+		void Init(float x, float y);
 		bool CheckCollisionWithBall(const Ball& ball);
-
-	private:
-		sf::Vector2f direction;
 	};
 }

@@ -13,6 +13,8 @@ namespace ArkanoidGame
 		void Update(float timeDelta) override;
 		void Draw(sf::RenderWindow& window) override;
 
+		void SetWin(bool win);
+
 	private:
 		// Resources
 		sf::Font font;
@@ -24,5 +26,9 @@ namespace ArkanoidGame
 		sf::Text gameOverText;
 		sf::Text hintText;
 		std::vector<sf::Text> recordsTableTexts;
+
+		std::vector<sf::Text> menuOptions;
+		int selectedOptionIndex = 0;
+		bool isWin = false;
 	};
 }

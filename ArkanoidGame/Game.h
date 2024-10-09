@@ -44,6 +44,9 @@ namespace ArkanoidGame
 		int GetRecordByPlayerId(const std::string& playerId) const;
 		void UpdateRecord(const std::string& playerId, int score);
 
+		bool GetIsWin();
+		void SetIsWin(bool isWin);
+
 		// Add new game state on top of the stack
 		void PushState(GameStateType stateType, bool isExclusivelyVisible);
 
@@ -62,5 +65,6 @@ namespace ArkanoidGame
 
 		GameOptions options = GameOptions::Default;
 		RecordsTable recordsTable;
+		bool isWin = false;
 	};
 }

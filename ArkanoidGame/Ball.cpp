@@ -42,4 +42,9 @@ namespace ArkanoidGame
 	{
 		direction.y *= -1;
 	}
+
+	void Ball::ReboundFromBlock()
+	{
+		direction.y *= -1;
+	}
 }

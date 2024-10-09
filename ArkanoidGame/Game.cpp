@@ -169,4 +169,14 @@ namespace ArkanoidGame
 	{
 		recordsTable[playerId] = std::max(recordsTable[playerId], score);
 	}
+
+	bool Game::GetIsWin()
+	{
+		return isWin;
+	}
+
+	void Game::SetIsWin(bool win)
+	{
+		isWin = win;
+	}
 }

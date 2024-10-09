@@ -6,37 +6,17 @@
 
 namespace
 {
-	// id textures
 	const std::string TEXTURE_ID = "platform";
 }
 
 namespace ArkanoidGame
 {
-	void Block::Init()
+	void Block::Init(float x, float y)
 	{
 		assert(texture.loadFromFile(TEXTURES_PATH + TEXTURE_ID + ".png"));
 
 		InitSprite(sprite, BLOCK_WIDTH, BLOCK_HEIGHT, texture);
-		sprite.setPosition({ SCREEN_WIDTH / 2.0, SCREEN_HEIGHT - PLATFORM_HEIGHT / 2.f });
-
-		const float angle = 45.f + rand() % 90; // [45, 135] degree
-		const auto pi = std::acos(-1.f);
-		direction.x = std::cos(pi / 180.f * angle);
-		direction.y = std::sin(pi / 180.f * angle);
-	}
-
-	void Block::Update(float timeDelta)
-	{
-		/*const auto pos = sprite.getPosition() + BALL_SPEED * timeDelta * direction;
-		sprite.setPosition(pos);
-
-		if (pos.x <= 0 || pos.x >= SCREEN_WIDTH) {
-			direction.x *= -1;
-		}
-
-		if (pos.y <= 0 || pos.y >= SCREEN_HEIGHT) {
-			direction.y *= -1;
-		}*/
+		sprite.setPosition({ x, y });
 	}
 
 	bool Block::CheckCollisionWithBall(const Ball& ball)
