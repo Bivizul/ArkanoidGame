@@ -110,7 +110,7 @@ namespace ArkanoidGame
 				if (event.key.code == sf::Keyboard::Up)
 				{
 					menuOptions[selectedOptionIndex].setFillColor(sf::Color::White);
-					selectedOptionIndex = (selectedOptionIndex - 1 + menuOptions.size()) % menuOptions.size();
+					selectedOptionIndex = (selectedOptionIndex - 1 + (int)menuOptions.size()) % (int)menuOptions.size();
 					menuOptions[selectedOptionIndex].setFillColor(sf::Color::Yellow);
 				}
 				else if (event.key.code == sf::Keyboard::Down)
