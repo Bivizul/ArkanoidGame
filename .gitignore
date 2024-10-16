@@ -3,3 +3,17 @@
 x64
 x86
 *.user
+
+# Ignore build artifacts
+build/
+*.obj
+*.exe
+
+# Ignore SFML build files
+SFML/lib/*.a
+SFML/lib/*.lib
+SFML/bin/*.dll
+
+# Ignore temporary files
+*.tmp
+*.log
