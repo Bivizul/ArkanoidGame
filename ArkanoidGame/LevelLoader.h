@@ -10,9 +10,10 @@ namespace ArkanoidGame
 {
 	enum class BlockType
 	{
+		Unbreackable,
 		Simple,
-		ThreeHit,
-		Unbreackable
+		DoubleHit,
+		ThreeHit
 	};
 
 	struct Level {

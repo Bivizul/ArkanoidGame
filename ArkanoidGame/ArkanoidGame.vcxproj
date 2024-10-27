@@ -184,6 +184,7 @@
     <ClCompile Include="GameStateData.cpp" />
     <ClCompile Include="GameStateGameWin.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
+    <ClCompile Include="DoubleHitBlock.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="IDelayedAction.h" />
     <ClInclude Include="IObserver.h" />
     <ClInclude Include="LevelLoader.h" />
+    <ClInclude Include="DoubleHitBlock.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="randomizer.h" />
     <ClInclude Include="Sprite.h" />

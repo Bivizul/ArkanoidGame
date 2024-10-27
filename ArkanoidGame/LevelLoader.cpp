@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include "DoubleHitBlock.h"
 
 namespace ArkanoidGame {
 	Level& LevelLoader::GetLevel(int i) 
@@ -27,6 +28,9 @@ namespace ArkanoidGame {
 			blockType = BlockType::Simple;
 			break;
 		case '2':
+			blockType = BlockType::DoubleHit;
+			break;
+		case '3':
 			blockType = BlockType::ThreeHit;
 			break;
 		case '0':
@@ -39,36 +43,36 @@ namespace ArkanoidGame {
 		return blockType;
 	}
 
-	void LevelLoader::LoadLevelsFromFile() 
-	{
+	void LevelLoader::LoadLevelsFromFile() {
 		std::string filepath = SETTINGS.LEVELS_CONFIG_PATH;
-		std::string line;
 		std::ifstream file(filepath);
+		std::string line;
 		int y = 0;
-		int levelCounter = 0;
 
-		if (!file.is_open()) {
-			std::cerr << "Error: Cannot open level config file at " << filepath << std::endl;
-			return;
-		}
-
-		while (getline(file, line)) 
-		{
-			if (line.rfind("level ", 0) == 0) 
-			{
-				auto level = std::stoi(line.substr(6, line.size() - 6));
-				std::cout << "Loading level " << level << std::endl;
+		while (getline(file, line)) {
+			if (line.rfind("level ", 0) == 0) {
 				levels.emplace_back(Level());
-				++levelCounter;
 				y = 0;
 			}
 			else {
 				int x = 0;
-				for (char c : line) 
-				{
-					if (c != ' ') 
-					{
-						levels.back().m_blocks.emplace_back(std::make_pair(sf::Vector2i{ x, y }, CharToBlockType(c)));
+				for (char c : line) {
+					if (c != ' ') {
+						BlockType blockType;
+						if (c == '1') {
+							blockType = BlockType::Simple;
+						}
+						else if (c == '2') {
+							blockType = BlockType::DoubleHit;
+						}
+						else if (c == '3') {
+							blockType = BlockType::ThreeHit;
+						}
+						else {
+							blockType = BlockType::Unbreackable;
+						}
+
+						levels.back().m_blocks.emplace_back(std::make_pair(sf::Vector2i{ x, y }, blockType));
 					}
 					++x;
 				}
@@ -76,12 +80,11 @@ namespace ArkanoidGame {
 			++y;
 		}
 
-		std::cout << "Total levels loaded: " << levelCounter << std::endl;
 		file.close();
 	}
 
 	int LevelLoader::GetLevelCount()
 	{
-		return levels.size();
+		return (int)levels.size();
 	}
 }

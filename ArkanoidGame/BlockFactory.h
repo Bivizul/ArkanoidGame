@@ -17,11 +17,26 @@ namespace ArkanoidGame
 		void ClearCounter();
 	};
 
+	class UnbreackableBlockFactory final : public BlockFactory
+	{
+	public:
+		std::shared_ptr<Block> CreateBlock(const sf::Vector2f& position) override;
+		~UnbreackableBlockFactory() override = default;
+	};
+
 	class SimpleBlockFactory final : public BlockFactory 
 	{
 	public:
 		std::shared_ptr<Block> CreateBlock(const sf::Vector2f& position) override;
 		~SimpleBlockFactory() override = default;
+
+	};
+
+	class DoubleHitBlockFactory final : public BlockFactory 
+	{
+	public:
+		std::shared_ptr<Block> CreateBlock(const sf::Vector2f& position) override;
+		~DoubleHitBlockFactory() override = default;
 
 	};
 
@@ -31,12 +46,5 @@ namespace ArkanoidGame
 		std::shared_ptr<Block> CreateBlock(const sf::Vector2f& position) override;
 		~ThreeHitBlockFactory() override = default;
 
-	};
-
-	class UnbreackableBlockFactory final : public BlockFactory 
-	{
-	public:
-		std::shared_ptr<Block> CreateBlock(const sf::Vector2f& position) override;
-		~UnbreackableBlockFactory() override = default;
 	};
 }

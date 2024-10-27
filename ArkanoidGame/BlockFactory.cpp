@@ -1,5 +1,6 @@
 #include "Block.h"
 #include "BlockFactory.h"
+#include "DoubleHitBlock.h"
 #include "ThreeHitBlock.h"
 
 namespace ArkanoidGame
@@ -26,12 +27,15 @@ namespace ArkanoidGame
 		return std::make_shared<UnbreackableBlock>(position);
 	}
 
+	std::shared_ptr<Block> DoubleHitBlockFactory::CreateBlock(const sf::Vector2f& position)
+	{
+		++createdBreackableBlocksCount;
+		return std::make_shared<DoubleHitBlock>(position);
+	}
+
 	std::shared_ptr<Block> ThreeHitBlockFactory::CreateBlock(const sf::Vector2f& position)
 	{
 		++createdBreackableBlocksCount;
 		return std::make_shared<ThreeHitBlock>(position);
 	}
-
-
-
 }
