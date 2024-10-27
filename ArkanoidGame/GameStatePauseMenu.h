@@ -1,4 +1,5 @@
 #pragma once
+#include "GameStateData.h"
 #include "Menu.h"
 #include <SFML/Graphics.hpp>
 

@@ -7,26 +7,27 @@ namespace ArkanoidGame
 {
 	void GameStateMainMenuData::Init()
 	{
-		assert(font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
+		assert(font.loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 
 		MenuItem startGame;
 		startGame.text.setString("Start Game");
 		startGame.text.setFont(font);
 		startGame.text.setCharacterSize(24);
-		startGame.onPressCallback = [](MenuItem&) {
-			Application::Instance().GetGame().SwitchStateTo(GameStateType::Playing);
+		startGame.onPressCallback = [](MenuItem&)
+			{
+				Application::Instance().GetGame().StartGame();
 			};
-		
 		const bool isInfiniteApples = Application::Instance().GetGame().IsEnableOptions(GameOptions::InfiniteApples);
 		MenuItem optionsInfiniteApplesItem;
 		optionsInfiniteApplesItem.text.setString("Infinite Apples: " + std::string(isInfiniteApples ? "On" : "Off"));
 		optionsInfiniteApplesItem.text.setFont(font);
 		optionsInfiniteApplesItem.text.setCharacterSize(24);
-		optionsInfiniteApplesItem.onPressCallback = [](MenuItem& item) {
-			Game& game = Application::Instance().GetGame();
-			bool newOptionValue = !game.IsEnableOptions(GameOptions::InfiniteApples);
-			game.SetOption(GameOptions::InfiniteApples, newOptionValue);
-			item.text.setString("Infinite Apples: " + std::string(newOptionValue ? "On" : "Off"));
+		optionsInfiniteApplesItem.onPressCallback = [](MenuItem& item)
+			{
+				Game& game = Application::Instance().GetGame();
+				bool newOptionValue = !game.IsEnableOptions(GameOptions::InfiniteApples);
+				game.SetOption(GameOptions::InfiniteApples, newOptionValue);
+				item.text.setString("Infinite Apples: " + std::string(newOptionValue ? "On" : "Off"));
 			};
 
 		const bool isWithAcceleration = Application::Instance().GetGame().IsEnableOptions(GameOptions::WithAcceleration);
@@ -34,11 +35,12 @@ namespace ArkanoidGame
 		optionsWithAccelerationItem.text.setString("With Acceleration: " + std::string(isWithAcceleration ? "On" : "Off"));
 		optionsWithAccelerationItem.text.setFont(font);
 		optionsWithAccelerationItem.text.setCharacterSize(24);
-		optionsWithAccelerationItem.onPressCallback = [](MenuItem& item) {
-			Game& game = Application::Instance().GetGame();
-			bool newOptionValue = !game.IsEnableOptions(GameOptions::WithAcceleration);
-			game.SetOption(GameOptions::WithAcceleration, newOptionValue);
-			item.text.setString("With Acceleration: " + std::string(newOptionValue ? "On" : "Off"));
+		optionsWithAccelerationItem.onPressCallback = [](MenuItem& item)
+			{
+				Game& game = Application::Instance().GetGame();
+				bool newOptionValue = !game.IsEnableOptions(GameOptions::WithAcceleration);
+				game.SetOption(GameOptions::WithAcceleration, newOptionValue);
+				item.text.setString("With Acceleration: " + std::string(newOptionValue ? "On" : "Off"));
 			};
 
 		MenuItem options;
@@ -54,29 +56,31 @@ namespace ArkanoidGame
 		options.childrenSpacing = 10.f;
 		options.childrens.push_back(optionsInfiniteApplesItem);
 		options.childrens.push_back(optionsWithAccelerationItem);
-		
 		MenuItem recordsItem;
 		recordsItem.text.setString("Records");
 		recordsItem.text.setFont(font);
 		recordsItem.text.setCharacterSize(24);
-		recordsItem.onPressCallback = [](MenuItem&) {
-			Application::Instance().GetGame().PushState(GameStateType::Records, true);
+		recordsItem.onPressCallback = [](MenuItem&)
+			{
+				Application::Instance().GetGame().ShowRecords();
 			};
 
 		MenuItem yesItem;
 		yesItem.text.setString("Yes");
 		yesItem.text.setFont(font);
 		yesItem.text.setCharacterSize(24);
-		yesItem.onPressCallback = [](MenuItem&) {
-			Application::Instance().GetGame().SwitchStateTo(GameStateType::None);
+		yesItem.onPressCallback = [](MenuItem&)
+			{
+				Application::Instance().GetGame().QuitGame();
 			};
 
 		MenuItem noItem;
 		noItem.text.setString("No");
 		noItem.text.setFont(font);
 		noItem.text.setCharacterSize(24);
-		noItem.onPressCallback = [this](MenuItem&) {
-			menu.GoBack();
+		noItem.onPressCallback = [this](MenuItem&)
+			{
+				menu.GoBack();
 			};
 
 		MenuItem exitGameItem;
@@ -105,7 +109,6 @@ namespace ArkanoidGame
 		mainMenu.childrens.push_back(options);
 		mainMenu.childrens.push_back(recordsItem);
 		mainMenu.childrens.push_back(exitGameItem);
-		
 
 		menu.Init(mainMenu);
 	}
@@ -122,7 +125,7 @@ namespace ArkanoidGame
 			{
 				menu.PressOnSelectedItem();
 			}
-			
+
 			Orientation orientation = menu.GetCurrentContext().childrenOrientation;
 			if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Up ||
 				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Left)
@@ -130,7 +133,7 @@ namespace ArkanoidGame
 				menu.SwitchToPreviousMenuItem();
 			}
 			else if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Down ||
-						orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Right)
+				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Right)
 			{
 				menu.SwitchToNextMenuItem();
 			}

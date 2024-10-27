@@ -3,13 +3,13 @@
 #include <SFML/Graphics.hpp>
 
 namespace ArkanoidGame {
-	
+
 	class Application
 	{
 	public:
 		Application(const Application& app) = delete;
 		Application& operator= (const Application&) = delete;
-		
+
 		static Application& Instance();
 
 		void Run();

@@ -1,23 +1,35 @@
 #pragma once
 #include "Ball.h"
-#include "Block.h"
+#include "BlockFactory.h"
+#include "GameStateData.h"
+#include "IObserver.h"
+#include "LevelLoader.h"
 #include "Platform.h"
 #include "SFML/Audio.hpp"
 #include "SFML/Graphics.hpp"
+#include <unordered_map>
 
 namespace ArkanoidGame
 {
 	class Game;
+	class Block;
+	class BlockFactory;
 
-	class GameStatePlayingData : public GameStateData
+	class GameStatePlayingData : public GameStateData, public IObserver, public std::enable_shared_from_this<GameStatePlayingData>
 	{
 	public:
 		void Init() override;
 		void HandleWindowEvent(const sf::Event& event) override;
 		void Update(float timeDelta) override;
 		void Draw(sf::RenderWindow& window) override;
+		void LoadNextLevel();
+		void Notify(std::shared_ptr<IObservable> observable) override;
 
 	private:
+		void createBlocks();
+		void GetBallInverse(const sf::Vector2f& ballPos, const sf::FloatRect& blockRect, bool& needInverseDirX,
+			bool& needInverseDirY);
+
 		// Resources
 		sf::Texture appleTexture;
 		sf::Texture rockTexture;
@@ -26,9 +38,8 @@ namespace ArkanoidGame
 		sf::SoundBuffer gameOverSoundBuffer;
 
 		// Game data
-		Platform platform;
-		Ball ball;
-		std::vector<Block> blocks;
+		std::vector<std::shared_ptr<GameObject>> gameObjects;
+		std::vector<std::shared_ptr<Block>> blocks;
 
 		// UI data
 		sf::Text scoreText;
@@ -37,5 +48,14 @@ namespace ArkanoidGame
 
 		// Sounds
 		sf::Sound gameOverSound;
+
+		//Blocks creator
+		std::unordered_map<BlockType, std::unique_ptr<BlockFactory>> factories;
+		int breackableBlocksCount = 0;
+
+		//Levels
+		LevelLoader levelLoder;
+		int currentLevel = 0;
+
 	};
 }

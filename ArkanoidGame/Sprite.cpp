@@ -46,20 +46,24 @@ namespace ArkanoidGame
 		} while (FullCheckCollisions(collection.begin(), collection.end(), sprite));
 	}
 
-	bool CheckSpriteIntersection(const sf::Sprite& sprite1, const sf::Sprite& sprite2) {
+	bool CheckSpriteIntersection(const sf::Sprite& sprite1, const sf::Sprite& sprite2)
+	{
 		const auto distance = sprite1.getPosition() - sprite2.getPosition();
-		if (sqrtf(distance.x * distance.x + distance.y * distance.y) * 2 < sprite1.getGlobalBounds().width + sprite2.getGlobalBounds().width) {
- 			return true;
+		if (sqrtf(distance.x * distance.x + distance.y * distance.y) * 2 < sprite1.getGlobalBounds().width + sprite2.getGlobalBounds().width) 
+		{
+			return true;
 		}
 		return false;
 	}
 
-	sf::Vector2f GetVectorBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo) {
+	sf::Vector2f GetVectorBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo) 
+	{
 		const auto result = spriteTo.getPosition() - spriteFrom.getPosition();
 		return result;
 	}
 
-	float GetManhattanDistanceBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo) {
+	float GetManhattanDistanceBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo) 
+	{
 		const auto result = spriteTo.getPosition() - spriteFrom.getPosition();
 		return std::fabs(result.x) + std::fabs(result.y);
 	}

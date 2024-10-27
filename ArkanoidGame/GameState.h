@@ -10,6 +10,7 @@ namespace ArkanoidGame
 		MainMenu,
 		Playing,
 		GameOver,
+		GameWin,
 		ExitDialog,
 		Records,
 	};
@@ -20,12 +21,13 @@ namespace ArkanoidGame
 		GameState() = default;
 		GameState(GameStateType type, bool isExclusivelyVisible);
 		GameState(const GameState& state) = delete;
-		GameState(GameState&& state) noexcept { operator=(std::move(state)); }
+		GameState(GameState&& state) { operator=(std::move(state)); }
 
 		~GameState();
 
 		GameState& operator= (const GameState& state) = delete;
-		GameState& operator= (GameState&& state) noexcept {
+		GameState& operator= (GameState&& state) noexcept 
+		{
 			type = state.type;
 			data = std::move(state.data);
 			isExclusivelyVisible = state.isExclusivelyVisible;
@@ -38,7 +40,7 @@ namespace ArkanoidGame
 
 		template<class T>
 		T* GetData() const {
-			return static_cast<T>(data);
+			return static_cast<T*>(data.get());
 		}
 
 		void Update(float timeDelta);
@@ -47,7 +49,7 @@ namespace ArkanoidGame
 
 	private:
 		GameStateType type = GameStateType::None;
-		std::unique_ptr<GameStateData> data = nullptr;
+		std::shared_ptr<GameStateData> data = nullptr;
 		bool isExclusivelyVisible = false;
 	};
 }

@@ -34,7 +34,7 @@ namespace ArkanoidGame
 		totalRect.left = position.x - origin.x * totalRect.width;
 		totalRect.top = position.y - origin.y * totalRect.height;
 		sf::Vector2f currentPos = { totalRect.left, totalRect.top };
-		
+
 		for (auto it = items.begin(); it != items.end(); ++it)
 		{
 			sf::FloatRect itemRect = (*it)->getGlobalBounds();
@@ -52,7 +52,7 @@ namespace ArkanoidGame
 				itemOrigin.x = alignment == Alignment::Min ? 0.f : alignment == Alignment::Middle ? 0.5f : 1.f;
 				currentPos.x = totalRect.left + itemOrigin.x * totalRect.width;
 			}
-			
+
 			(*it)->setOrigin(GetTextOrigin(**it, itemOrigin));
 			(*it)->setPosition(currentPos);
 			window.draw(**it);
@@ -65,8 +65,6 @@ namespace ArkanoidGame
 			{
 				currentPos.y += itemRect.height + spacing;
 			}
-
-			
 		}
 	}
 }

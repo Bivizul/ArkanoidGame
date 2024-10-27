@@ -7,11 +7,9 @@
 
 namespace ArkanoidGame
 {
-	const char* PLAYER_NAME = "Player";
-
 	void GameStateGameOverData::Init()
 	{
-		assert(font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
+		assert(font.loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 
 		timeSinceGameOver = 0.f;
 
@@ -19,44 +17,15 @@ namespace ArkanoidGame
 		backgroundColor.a = 200; // a means Alfa, opacity
 		background.setFillColor(backgroundColor);
 
-		Game& game = Application::Instance().GetGame();
-		isWin = game.GetIsWin();
-
-		if (isWin)
-		{
-			gameOverText.setFont(font);
-			gameOverText.setCharacterSize(48);
-			gameOverText.setStyle(sf::Text::Bold);
-			gameOverText.setFillColor(sf::Color::Green);
-			gameOverText.setString("WIN");
-
-			sf::Text playAgain;
-			playAgain.setFont(font);
-			playAgain.setCharacterSize(36);
-			playAgain.setString("Play again");
-			playAgain.setFillColor(sf::Color::White);
-			menuOptions.push_back(playAgain);
-
-			sf::Text exitToMenu;
-			exitToMenu.setFont(font);
-			exitToMenu.setCharacterSize(36);
-			exitToMenu.setString("Exit to menu");
-			menuOptions.push_back(exitToMenu);
-
-			menuOptions[selectedOptionIndex].setFillColor(sf::Color::Yellow);
-		}
-		else
-		{
-			gameOverText.setFont(font);
-			gameOverText.setCharacterSize(48);
-			gameOverText.setStyle(sf::Text::Bold);
-			gameOverText.setFillColor(sf::Color::Red);
-			gameOverText.setString("GAME OVER");
-		}
-
-		recordsTableTexts.reserve(MAX_RECORDS_TABLE_SIZE);
+		gameOverText.setFont(font);
+		gameOverText.setCharacterSize(48);
+		gameOverText.setStyle(sf::Text::Bold);
+		gameOverText.setFillColor(sf::Color::Red);
+		gameOverText.setString("GAME OVER");
+		recordsTableTexts.reserve(SETTINGS.MAX_RECORDS_TABLE_SIZE);
 
 		std::multimap<int, std::string> sortedRecordsTable;
+		Game& game = Application::Instance().GetGame();
 		for (const auto& item : game.GetRecordsTable())
 		{
 			sortedRecordsTable.insert(std::make_pair(item.second, item.first));
@@ -64,17 +33,18 @@ namespace ArkanoidGame
 
 		bool isPlayerInTable = false;
 		auto it = sortedRecordsTable.rbegin();
-		for (int i = 0; i < MAX_RECORDS_TABLE_SIZE && it != sortedRecordsTable.rend(); ++i, ++it) // Note, we can do several actions in for action block
+		for (int i = 0; i < SETTINGS.MAX_RECORDS_TABLE_SIZE && it != sortedRecordsTable.rend(); ++i, ++it) // Note, we can do several actions in for action block
 		{
-			recordsTableTexts.emplace_back();
+			recordsTableTexts.emplace_back(); // Create text in place
 			sf::Text& text = recordsTableTexts.back();
 
+			// We can use streams for writing into string and reading from it
 			std::stringstream sstream;
 			sstream << i + 1 << ". " << it->second << ": " << it->first;
 			text.setString(sstream.str());
 			text.setFont(font);
 			text.setCharacterSize(24);
-			if (it->second == PLAYER_NAME)
+			if (it->second == SETTINGS.PLAYER_NAME)
 			{
 				text.setFillColor(sf::Color::Green);
 				isPlayerInTable = true;
@@ -85,12 +55,13 @@ namespace ArkanoidGame
 			}
 		}
 
+		// If player is not in table, replace last element with him
 		if (!isPlayerInTable)
 		{
 			sf::Text& text = recordsTableTexts.back();
 			std::stringstream sstream;
-			int playerScores = game.GetRecordByPlayerId(PLAYER_NAME);
-			sstream << MAX_RECORDS_TABLE_SIZE << ". " << PLAYER_NAME << ": " << playerScores;
+			int playerScores = game.GetRecordByPlayerId(SETTINGS.PLAYER_NAME);
+			sstream << SETTINGS.MAX_RECORDS_TABLE_SIZE << ". " << SETTINGS.PLAYER_NAME << ": " << playerScores;
 			text.setString(sstream.str());
 			text.setFillColor(sf::Color::Green);
 		}
@@ -103,47 +74,15 @@ namespace ArkanoidGame
 
 	void GameStateGameOverData::HandleWindowEvent(const sf::Event& event)
 	{
-		if (isWin)
+		if (event.type == sf::Event::KeyPressed)
 		{
-			if (event.type == sf::Event::KeyPressed)
+			if (event.key.code == sf::Keyboard::Space)
 			{
-				if (event.key.code == sf::Keyboard::Up)
-				{
-					menuOptions[selectedOptionIndex].setFillColor(sf::Color::White);
-					selectedOptionIndex = (selectedOptionIndex - 1 + (int)menuOptions.size()) % (int)menuOptions.size();
-					menuOptions[selectedOptionIndex].setFillColor(sf::Color::Yellow);
-				}
-				else if (event.key.code == sf::Keyboard::Down)
-				{
-					menuOptions[selectedOptionIndex].setFillColor(sf::Color::White);
-					selectedOptionIndex = (selectedOptionIndex + 1) % menuOptions.size();
-					menuOptions[selectedOptionIndex].setFillColor(sf::Color::Yellow);
-				}
-				else if (event.key.code == sf::Keyboard::Enter)
-				{
-					if (selectedOptionIndex == 0)
-					{
-						Application::Instance().GetGame().SwitchStateTo(GameStateType::Playing);
-					}
-					else if (selectedOptionIndex == 1)
-					{
-						Application::Instance().GetGame().SwitchStateTo(GameStateType::MainMenu);
-					}
-				}
+				Application::Instance().GetGame().StartGame();
 			}
-		}
-		else
-		{
-			if (event.type == sf::Event::KeyPressed)
+			else if (event.key.code == sf::Keyboard::Escape)
 			{
-				if (event.key.code == sf::Keyboard::Space)
-				{
-					Application::Instance().GetGame().SwitchStateTo(GameStateType::Playing);
-				}
-				else if (event.key.code == sf::Keyboard::Escape)
-				{
-					Application::Instance().GetGame().SwitchStateTo(GameStateType::MainMenu);
-				}
+				Application::Instance().GetGame().ExitGame();
 			}
 		}
 	}
@@ -180,26 +119,8 @@ namespace ArkanoidGame
 		sf::Vector2f tablePosition = { viewSize.x / 2, viewSize.y / 2.f };
 		DrawTextList(window, textsList, 10.f, Orientation::Vertical, Alignment::Min, tablePosition, { 0.5f, 0.f });
 
-		if (isWin)
-		{
-			for (size_t i = 0; i < menuOptions.size(); ++i)
-			{
-				sf::Text& option = menuOptions[i];
-				option.setOrigin(GetTextOrigin(option, { 0.5f, 0.5f }));
-				option.setPosition(viewSize.x / 2.f, viewSize.y - 100.f + i * 50.f);
-				window.draw(option);
-			}
-		}
-		else
-		{
-			hintText.setOrigin(GetTextOrigin(hintText, { 0.5f, 1.f }));
-			hintText.setPosition(viewSize.x / 2.f, viewSize.y - 50.f);
-			window.draw(hintText);
-		}
-	}
-
-	void GameStateGameOverData::SetWin(bool win)
-	{
-		isWin = win;
+		hintText.setOrigin(GetTextOrigin(hintText, { 0.5f, 1.f }));
+		hintText.setPosition(viewSize.x / 2.f, viewSize.y - 50.f);
+		window.draw(hintText);
 	}
 }

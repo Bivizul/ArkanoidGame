@@ -12,7 +12,7 @@ namespace ArkanoidGame
 			SelectMenuItem(rootItem.childrens.front());
 		}
 	}
-	
+
 	void Menu::InitMenuItem(MenuItem& item)
 	{
 		for (auto& child : item.childrens)
@@ -43,20 +43,22 @@ namespace ArkanoidGame
 			position,
 			origin);
 	}
-	
+
 	void Menu::PressOnSelectedItem()
 	{
 		if (!selectedItem) {
 			return;
 		}
 
-		if (selectedItem->onPressCallback) {
+		if (selectedItem->onPressCallback) 
+		{
 			selectedItem->onPressCallback(*selectedItem);
 			return;
 		}
 
 		// default behaviour
-		if (!selectedItem->childrens.empty()) {
+		if (!selectedItem->childrens.empty()) 
+		{
 			SelectMenuItem(selectedItem->childrens.front());
 		}
 	}
@@ -71,36 +73,43 @@ namespace ArkanoidGame
 
 	void Menu::SwitchToPreviousMenuItem()
 	{
-		if (!selectedItem) {
+		if (!selectedItem) 
+		{
 			return;
 		}
-		
+
 		MenuItem* parent = selectedItem->parent;
 		assert(parent); // There always should be parent
 
-		auto it = std::find_if(parent->childrens.begin(), parent->childrens.end(), [this](const auto& item) {
+		auto it = std::find_if(parent->childrens.begin(), parent->childrens.end(), [this](const auto& item) 
+			{
 			return selectedItem == &item;
-		});
-		if (it != parent->childrens.begin()) {
+			});
+
+		if (it != parent->childrens.end() && it != parent->childrens.begin()) 
+		{
 			SelectMenuItem(*std::prev(it));
 		}
 	}
 
 	void Menu::SwitchToNextMenuItem()
 	{
-		if (!selectedItem) {
+		if (!selectedItem) 
+		{
 			return;
 		}
-		
+
 		MenuItem* parent = selectedItem->parent;
 		assert(parent); // There always should be parent
-		
-		auto it = std::find_if(parent->childrens.begin(), parent->childrens.end(), [this](const auto& item) {
+
+		auto it = std::find_if(parent->childrens.begin(), parent->childrens.end(), [this](const auto& item) 
+			{
 			return selectedItem == &item;
 			});
-		it = std::next(it);
-		if (it != parent->childrens.end()) {
-			SelectMenuItem(*it);
+
+		if (it != parent->childrens.end() && std::next(it) != parent->childrens.end()) 
+		{
+			SelectMenuItem(*std::next(it));
 		}
 	}
 

@@ -36,7 +36,7 @@ namespace ArkanoidGame
 
 		void PressOnSelectedItem();	// press on selected menu item
 		void GoBack();	// go back to previous menu
-		
+
 		void SwitchToPreviousMenuItem();
 		void SwitchToNextMenuItem();
 
